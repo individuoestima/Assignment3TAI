@@ -7,7 +7,7 @@ import java.util.zip.GZIPOutputStream;
 
 public class Main {
 
-    public static int compressConcatenatedImages(Path fileLocation,Path fileLocation2) throws IOException {
+    public static int compressConcatenatedImagesGZIP(Path fileLocation,Path fileLocation2) throws IOException {
         byte[] a = Files.readAllBytes(fileLocation);
         byte[] b = Files.readAllBytes(fileLocation2);
         byte[] data = new byte[a.length + b.length];
@@ -30,7 +30,7 @@ public class Main {
         return compressedData.length;
     }
 
-    public static int compressImage(Path fileLocation) throws IOException {
+    public static int compressImageGZIP(Path fileLocation) throws IOException {
         byte [] data = Files.readAllBytes(fileLocation);
         ByteArrayOutputStream byteStream =
                 new ByteArrayOutputStream(data.length);
@@ -50,9 +50,15 @@ public class Main {
 
     }
 
+    public static void ncdGZIP(Path fileLocation,Path fileLocation2) throws IOException {
+        int top = compressConcatenatedImagesGZIP(fileLocation,fileLocation2) - Math.min(compressImageGZIP(fileLocation),compressImageGZIP(fileLocation2));
+        float ncd = (float)top / (Math.max(compressImageGZIP(fileLocation),compressImageGZIP(fileLocation2)));
+        System.out.println(ncd);
+    }
+
     public static void main(String[] args) throws IOException {
         Path fileLocation = Paths.get("/home/kanto/Documents/TAI/Assignment3TAI/orl_faces/s01/01.pgm");
-        System.out.println(compressConcatenatedImages(fileLocation,fileLocation));
-        System.out.println(compressImage(fileLocation));
+        Path fileLocation2 = Paths.get("/home/kanto/Documents/TAI/Assignment3TAI/orl_faces/s01/04.pgm");
+        ncdGZIP(fileLocation,fileLocation2);
     }
 }
