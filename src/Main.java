@@ -59,9 +59,9 @@ public class Main {
         return ncd;
     }
 
-    public static void main(String[] args) throws IOException {
-        Path test = Paths.get("/home/kanto/Documents/TAI/Assignment3TAI/orl_faces/s01/04.pgm");
+    public static void rankingGzip(Path test) throws IOException {
         ArrayList <Float> values = new ArrayList<>();
+
         for(int i = 1 ; i<10;i++) {
             Path fileLocation = Paths.get("/home/kanto/Documents/TAI/Assignment3TAI/orl_faces/s0"+i+"/01.pgm");
             Path fileLocation2 = Paths.get("/home/kanto/Documents/TAI/Assignment3TAI/orl_faces/s0"+i+"/02.pgm");
@@ -97,5 +97,11 @@ public class Main {
             }
         }
         System.out.println(index + " "+ values.get(index));
+    }
+
+    public static void main(String[] args) throws IOException {
+        Path test = Paths.get("/home/kanto/Documents/TAI/Assignment3TAI/orl_faces/s01/04.pgm");
+        rankingGzip(test);
+
     }
 }
