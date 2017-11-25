@@ -14,6 +14,7 @@ public class Bzip {
     public Bzip(Path f){
         file = f;
     }
+
     public int compressConcatenatedImagesBZIP(byte [] test,Path fileLocation) throws IOException {
         byte[] image = Files.readAllBytes(fileLocation);
         byte[] data = new byte[test.length + image.length];
@@ -102,7 +103,7 @@ public class Bzip {
                 index = i;
             }
         }
-        System.out.println(index + " "+ values.get(index));
+        System.out.println((index+1) + " "+ values.get(index));
     }
 
 

@@ -102,7 +102,7 @@ public class Gzip {
                 index = i;
             }
         }
-        System.out.println(index + " "+ values.get(index));
+        System.out.println((index+1) + " "+ values.get(index));
     }
 
 
