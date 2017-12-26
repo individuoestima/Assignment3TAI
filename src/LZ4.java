@@ -1,4 +1,4 @@
-import org.apache.tools.bzip2.CBZip2OutputStream;
+import net.jpountz.lz4.LZ4BlockOutputStream;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -9,15 +9,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class Bzip {
-
+public class LZ4 {
     private Path file;
 
-    public Bzip(Path f){
+    public LZ4(Path f){
         file = f;
     }
 
-    public int compressConcatenatedImagesBZIP(byte [] test,Path fileLocation) throws IOException {
+
+    public int compressConcatenatedImagesLZ4(byte [] test,Path fileLocation) throws IOException {
         byte[] image = Files.readAllBytes(fileLocation);
         byte[] data = new byte[test.length + image.length];
         System.arraycopy(test, 0, data, 0, test.length);
@@ -25,8 +25,8 @@ public class Bzip {
         ByteArrayOutputStream byteStream =
                 new ByteArrayOutputStream(data.length);
         try {
-            CBZip2OutputStream zipStream =
-                    new CBZip2OutputStream(byteStream);
+            LZ4BlockOutputStream zipStream =
+                    new LZ4BlockOutputStream(byteStream);
             try {
                 zipStream.write(data);
             } finally {
@@ -39,12 +39,12 @@ public class Bzip {
         return compressedData.length;
     }
 
-    public int compressImageBZIP(byte [] data) throws IOException {
+    public int compressImageLZ4(byte [] data) throws IOException {
         ByteArrayOutputStream byteStream =
                 new ByteArrayOutputStream(data.length);
         try {
-            CBZip2OutputStream zipStream =
-                    new CBZip2OutputStream(byteStream);
+            LZ4BlockOutputStream zipStream =
+                    new LZ4BlockOutputStream(byteStream);
             try {
                 zipStream.write(data);
             } finally {
@@ -58,17 +58,17 @@ public class Bzip {
 
     }
 
-    public float ncdBZIP(byte [] data,Path fileLocation2) throws IOException {
+    public float ncdLZ4(byte [] data,Path fileLocation2) throws IOException {
         byte [] image = Files.readAllBytes(fileLocation2);
-        int data_size = compressImageBZIP(data);
-        int image_size = compressImageBZIP(image);
+        int data_size = compressImageLZ4(data);
+        int image_size = compressImageLZ4(image);
 
-        int top = compressConcatenatedImagesBZIP(data,fileLocation2) - Math.min(data_size,image_size);
+        int top = compressConcatenatedImagesLZ4(data,fileLocation2) - Math.min(data_size,image_size);
         float ncd = (float)top / (Math.max(data_size,image_size));
         return ncd;
     }
 
-    public void rankingBZIP() throws IOException {
+    public void rankingLZ4() throws IOException {
         ArrayList<Float> values = new ArrayList<>();
 
         for(int i = 1 ; i<10;i++) {
@@ -98,7 +98,7 @@ public class Bzip {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-            values.add(ncdBZIP(data, file) + f);
+            values.add(ncdLZ4(data, file) + f);
         }
         for(int i = 10 ; i<=40;i++) {
             Path fileLocation = Paths.get("orl_faces/s"+i+"/01.pgm");
@@ -127,7 +127,7 @@ public class Bzip {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-            values.add(ncdBZIP(data, file) + f);
+            values.add(ncdLZ4(data, file) + f);
         }
         int index = 0;
         for (int i = 0 ;i<values.size();i++){
@@ -137,6 +137,4 @@ public class Bzip {
         }
         System.out.println("This picture is most likely to be from subject "+(index+1));
     }
-
-
 }
