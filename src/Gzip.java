@@ -1,5 +1,7 @@
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -68,10 +70,10 @@ public class Gzip {
     public void rankingGZIP() throws IOException {
         ArrayList<Float> values = new ArrayList<>();
 
-        for(int i = 1 ; i<10;i++) {
-            Path fileLocation = Paths.get("orl_faces/s0"+i+"/01.pgm");
-            Path fileLocation2 = Paths.get("orl_faces/s0"+i+"/02.pgm");
-            Path fileLocation3 = Paths.get("orl_faces/s0"+i+"/03.pgm");
+        for (int i = 1; i < 10; i++) {
+            Path fileLocation = Paths.get("orl_faces/s0" + i + "/01.pgm");
+            Path fileLocation2 = Paths.get("orl_faces/s0" + i + "/02.pgm");
+            Path fileLocation3 = Paths.get("orl_faces/s0" + i + "/03.pgm");
 
             byte[] a = Files.readAllBytes(fileLocation);
             byte[] b = Files.readAllBytes(fileLocation2);
@@ -80,12 +82,27 @@ public class Gzip {
             System.arraycopy(a, 0, data, 0, a.length);
             System.arraycopy(b, 0, data, a.length, b.length);
             System.arraycopy(c, 0, data, b.length, c.length);
-            values.add(ncdGZIP(data, file));
+            float f = 0;
+            try {
+                Process p = Runtime.getRuntime().exec("sh NCCD.sh "+file.toString()+" "+fileLocation.toString()+" "+fileLocation2.toString()+" "+fileLocation3.toString());
+                p.waitFor();
+                BufferedReader reader =
+                        new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+                String line = "";
+                while ((line = reader.readLine())!= null) {
+                    f = Float.parseFloat(line);
+                }
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            values.add(ncdGZIP(data, file) + f);
         }
-        for(int i = 10 ; i<=40;i++) {
-            Path fileLocation = Paths.get("orl_faces/s"+i+"/01.pgm");
-            Path fileLocation2 = Paths.get("orl_faces/s"+i+"/02.pgm");
-            Path fileLocation3 = Paths.get("orl_faces/s"+i+"/03.pgm");
+        for (int i = 10; i <= 40; i++) {
+            Path fileLocation = Paths.get("orl_faces/s" + i + "/01.pgm");
+            Path fileLocation2 = Paths.get("orl_faces/s" + i + "/02.pgm");
+            Path fileLocation3 = Paths.get("orl_faces/s" + i + "/03.pgm");
 
             byte[] a = Files.readAllBytes(fileLocation);
             byte[] b = Files.readAllBytes(fileLocation2);
@@ -94,15 +111,30 @@ public class Gzip {
             System.arraycopy(a, 0, data, 0, a.length);
             System.arraycopy(b, 0, data, a.length, b.length);
             System.arraycopy(c, 0, data, b.length, c.length);
-            values.add(ncdGZIP(data, file));
+            float f = 0;
+            try {
+                Process p = Runtime.getRuntime().exec("sh NCCD.sh "+file.toString()+" "+fileLocation.toString()+" "+fileLocation2.toString()+" "+fileLocation3.toString());
+                p.waitFor();
+                BufferedReader reader =
+                        new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+                String line = "";
+                while ((line = reader.readLine())!= null) {
+                    f = Float.parseFloat(line);
+                }
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            values.add(ncdGZIP(data, file) + f);
         }
         int index = 0;
-        for (int i = 0 ;i<values.size();i++){
-            if(values.get(i) < values.get(index)){
+        for (int i = 0; i < values.size(); i++) {
+            if (values.get(i) < values.get(index)) {
                 index = i;
             }
         }
-        System.out.println((index+1) + " "+ values.get(index));
+        System.out.println("This picture is most likely to be from subject "+(index+1));
     }
 
 

@@ -1,7 +1,9 @@
 import org.apache.tools.bzip2.CBZip2OutputStream;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,6 +15,10 @@ public class Bzip {
 
     public Bzip(Path f){
         file = f;
+    }
+
+    public void setPath(Path f){
+        this.file = f;
     }
 
     public int compressConcatenatedImagesBZIP(byte [] test,Path fileLocation) throws IOException {
@@ -81,7 +87,22 @@ public class Bzip {
             System.arraycopy(a, 0, data, 0, a.length);
             System.arraycopy(b, 0, data, a.length, b.length);
             System.arraycopy(c, 0, data, b.length, c.length);
-            values.add(ncdBZIP(data, file));
+            float f = 0;
+            try {
+                Process p = Runtime.getRuntime().exec("sh NCCD.sh "+file.toString()+" "+fileLocation.toString()+" "+fileLocation2.toString()+" "+fileLocation3.toString());
+                p.waitFor();
+                BufferedReader reader =
+                        new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+                String line = "";
+                while ((line = reader.readLine())!= null) {
+                    f = Float.parseFloat(line);
+                }
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            values.add(ncdBZIP(data, file) + f);
         }
         for(int i = 10 ; i<=40;i++) {
             Path fileLocation = Paths.get("orl_faces/s"+i+"/01.pgm");
@@ -95,7 +116,22 @@ public class Bzip {
             System.arraycopy(a, 0, data, 0, a.length);
             System.arraycopy(b, 0, data, a.length, b.length);
             System.arraycopy(c, 0, data, b.length, c.length);
-            values.add(ncdBZIP(data, file));
+            float f = 0;
+            try {
+                Process p = Runtime.getRuntime().exec("sh NCCD.sh "+file.toString()+" "+fileLocation.toString()+" "+fileLocation2.toString()+" "+fileLocation3.toString());
+                p.waitFor();
+                BufferedReader reader =
+                        new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+                String line = "";
+                while ((line = reader.readLine())!= null) {
+                    f = Float.parseFloat(line);
+                }
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            values.add(ncdBZIP(data, file) + f);
         }
         int index = 0;
         for (int i = 0 ;i<values.size();i++){
@@ -103,7 +139,7 @@ public class Bzip {
                 index = i;
             }
         }
-        System.out.println((index+1) + " "+ values.get(index));
+        System.out.println("This picture is most likely to be from subject "+(index+1));
     }
 
 
