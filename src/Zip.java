@@ -69,7 +69,7 @@ public class Zip {
         return ncd;
     }
 
-    public void rankingZIP() throws IOException {
+    public int rankingZIP() throws IOException {
         ArrayList<Float> values = new ArrayList<>();
 
         for(int i = 1 ; i<10;i++) {
@@ -136,6 +136,6 @@ public class Zip {
                 index = i;
             }
         }
-        System.out.println("This picture is most likely to be from subject "+(index+1));
+        return (index+1);
     }
 }

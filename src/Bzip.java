@@ -68,7 +68,7 @@ public class Bzip {
         return ncd;
     }
 
-    public void rankingBZIP() throws IOException {
+    public int rankingBZIP() throws IOException {
         ArrayList<Float> values = new ArrayList<>();
 
         for(int i = 1 ; i<10;i++) {
@@ -135,7 +135,7 @@ public class Bzip {
                 index = i;
             }
         }
-        System.out.println("This picture is most likely to be from subject "+(index+1));
+        return (index+1);
     }
 
 
